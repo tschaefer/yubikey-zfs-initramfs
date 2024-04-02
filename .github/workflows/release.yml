@@ -1,0 +1,23 @@
+---
+name: Release
+on:
+  push:
+    tags:
+    - "*"
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y make gzip pandoc
+    - name: Make debian package
+      run: make
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: yubikey-zfs-initramfs-*.deb
+        bodyFile: changelog.Debian

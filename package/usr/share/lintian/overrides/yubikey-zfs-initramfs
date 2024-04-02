@@ -1,0 +1,2 @@
+yubikey-zfs-initramfs binary: file-in-etc-not-marked-as-conffile [etc/zfs/initramfs-tools-load-key]
+

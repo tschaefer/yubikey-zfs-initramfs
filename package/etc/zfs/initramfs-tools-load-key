@@ -1,0 +1,26 @@
+#!/bin/sh
+
+if /bin/plymouth --ping 2>/dev/null; then
+    for _ in 1 2 3; do
+        plymouth ask-for-password --prompt "Encrypted ZFS challenge for ${ENCRYPTIONROOT}" | \
+            ykchalresp -2 -i- | $ZFS load-key "${ENCRYPTIONROOT}" && break
+    done
+elif [ -e /run/systemd/system ]; then
+    for _ in 1 2 3; do
+        systemd-ask-password --no-tty "Encrypted ZFS challenge for ${ENCRYPTIONROOT}" | \
+            ykchalresp -2 -i- | $ZFS load-key "${ENCRYPTIONROOT}" && break
+    done
+else
+    trap 'stty echo' INT
+
+    read -r storeprintk _ < /proc/sys/kernel/printk
+    echo 7 > /proc/sys/kernel/printk
+    stty -echo
+    printf "Encrypted ZFS challenge for %s: " "${ENCRYPTIONROOT}"
+    read -r challenge
+    stty echo
+    printf "\n"
+    echo "$storeprintk" > /proc/sys/kernel/printk
+
+    echo "${challenge}" | ykchalresp -2 -i- | $ZFS load-key "${ENCRYPTIONROOT}"
+fi

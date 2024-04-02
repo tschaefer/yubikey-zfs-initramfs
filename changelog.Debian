@@ -1,0 +1,5 @@
+yubikey-zfs-initramfs (1.0-1) stable; urgency=low
+
+  * Yubikey two factor authentication for ZFS root filesystem.
+
+ -- Tobias Schäfer <tschaefer@blackox.org>  Wed, 20 Mar 2024 18:30:00 +0200

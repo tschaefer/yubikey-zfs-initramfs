@@ -1,0 +1,133 @@
+#!/bin/sh
+
+set -e
+
+if [ "$(id -u)" -ne 0 ]
+then
+    echo "You must be root." 1>&2
+    exit 1
+fi
+
+usage() {
+cat <<EOF
+Usage:
+    yubikey-zfs-enroll [-f] ZFS [CHALLENGE]
+
+    yubikey-zfs-enroll -h
+
+Options:
+    -h  Show this help message and exit.
+    -f  Force the enrollment process, no confirmation will be prompted.
+EOF
+}
+
+get_opts() {
+    while getopts "fh" opt
+    do
+        case $opt in
+            f)
+                FORCE=1
+                ;;
+            h)
+                usage
+                exit 0
+                ;;
+            \?)
+                usage >&2
+                exit 1
+                ;;
+        esac
+        shift $((OPTIND-1))
+    done
+
+    ZFS=$1
+    CHALLENGE=$2
+
+    if [ -z "${ZFS}" ]
+    then
+        usage
+    fi
+}
+
+get_fs_value() {
+    zfs get -H -o value "$2" "$1" 2>/dev/null
+}
+
+check_pool() {
+    encryption=$(get_fs_value "${ZFS}" "encryption")
+    if [  "$encryption" = "off" ]
+    then
+        echo "${ZFS} is not encrypted." 1>&2
+        exit 1
+    fi
+
+    keystatus=$(get_fs_value "${ZFS}" "keystatus")
+    if [ "$keystatus" != "available" ]
+    then
+        echo "${ZFS} current key must be loaded." 1>&2
+        exit 1
+    fi
+}
+
+check_yubikey() {
+    if ! ykinfo -q -a >/dev/null 2>&1
+    then
+        echo "Yubikey not found." 1>&2
+        exit 1
+    fi
+
+    if [ "$(ykinfo -q -2 2>/dev/null)" -ne 1 ]
+    then
+        echo "Yubikey second slot not configured." 1>&2
+        exit 1
+    fi
+}
+
+enroll() {
+    if [ -z "${CHALLENGE}" ]; then
+        if [ -e /run/systemd/system ]
+        then
+            CHALLENGE=$(systemd-ask-password --echo=no "Encrypted ZFS challenge for ${ZFS}: ")
+        else
+            trap 'stty echo' INT
+
+            stty -echo
+            printf "Encrypted ZFS challenge for %s: " "${ZFS}"
+            read -r CHALLENGE
+            stty echo
+            printf "\n"
+        fi
+    fi
+
+    if [ -z "${FORCE}" ]
+    then
+        echo "This will enroll a new key for ${ZFS}."
+        echo "The existing key will be overriden!!!"
+        echo
+        printf "Do you want to continue? [y/N] "
+        read -r response
+        case "${response}" in
+            [yY][eE][sS]|[yY])
+                ;;
+            *)
+                echo "Aborted." 1>&2
+                exit 1
+                ;;
+        esac
+    fi
+
+    ENCRYPTIONROOT=$(get_fs_value "${ZFS}" "encryptionroot")
+    echo "${CHALLENGE}" | ykchalresp -2 -i- | zfs change-key "${ENCRYPTIONROOT}"
+}
+
+main() {
+    get_opts ${1+"$@"}
+
+    check_pool
+    check_yubikey
+    enroll
+
+    exit 0
+}
+
+main ${1+"$@"}

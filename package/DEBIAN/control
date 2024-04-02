@@ -1,0 +1,16 @@
+Package: yubikey-zfs-initramfs
+Version: 1.0-1
+Section: contrib/kernel
+Priority: optional
+Architecture: all
+Depends: yubikey-manager, yubikey-personalization, zfs-initramfs, zfs | zfsutils-linux
+Maintainer: Tobias Schäfer <tschaefer@blackox.org>
+Installed-Size: 180 kB
+Homepage: https://github.com/tschaefer/yubikey-zfs-initramfs
+Description: Yubikey two factor authentication for ZFS root filesystem.
+ With this extension to the zfs-initramfs package, you can unlock a ZFS
+ encrypted root filesystem using your YubiKey as a second factor.
+ .
+ The challenge-response mechanism of the YubiKey is used to generate a response
+ based on a passphrase (challenge). Only the combination of the challenge and
+ the YubiKey will generate the valid key (response).
