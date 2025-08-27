@@ -1,9 +1,9 @@
 Package: yubikey-zfs-initramfs
-Version: 1.0-1
+Version: 1.1-1
 Section: contrib/kernel
 Priority: optional
 Architecture: all
-Depends: yubikey-manager, yubikey-personalization, zfs-initramfs, zfs | zfsutils-linux
+Depends: yubikey-manager, yubikey-personalization, zfs-initramfs | openzfs-zfs-initramfs, zfs | zfsutils-linux | openzfs-zfsutils
 Maintainer: Tobias Schäfer <tschaefer@blackox.org>
 Installed-Size: 180 kB
 Homepage: https://github.com/tschaefer/yubikey-zfs-initramfs
