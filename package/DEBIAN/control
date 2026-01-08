@@ -1,5 +1,5 @@
 Package: yubikey-zfs-initramfs
-Version: 1.1-1
+Version: 1.1-2
 Section: contrib/kernel
 Priority: optional
 Architecture: all

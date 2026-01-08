@@ -42,7 +42,7 @@ Written by Tobias Schäfer <tschaefer@blackox.org>
 
 # COPYRIGHT
 
-Copyright © 2024 Tobias Schäfer <tschaefer@blackox.org> License GPLv3+: GNU GPL
-version 3 or later <https://gnu.org/licenses/gpl.html>.
+Copyright © 2024-2026 Tobias Schäfer <tschaefer@blackox.org> License GPLv3+:
+GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
 This  is free software: you are free to change and redistribute it. There is
 NO WARRANTY, to the extent permitted by law.

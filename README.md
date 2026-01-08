@@ -9,7 +9,7 @@ based on a passphrase (challenge). Only the combination of the challenge and
 the enrolled YubiKey will generate the valid key (response).
 
 For general setup of ZFS as root filesystem please follow the instructions in the
-[OpenZFS Documentation](https://openzfs.github.io/openzfs-docs/Getting%20Started/Debian/Debian%20Bookworm%20Root%20on%20ZFS.html).
+[OpenZFS Documentation](https://openzfs.github.io/openzfs-docs/Getting%20Started/Debian/Debian%20Trixie%20Root%20on%20ZFS.html).
 
 For the challenge-response mechanism of the YubiKey the second slot is used
 and maybe set up as follows:

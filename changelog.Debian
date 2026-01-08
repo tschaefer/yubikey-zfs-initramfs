@@ -9,3 +9,9 @@ yubikey-zfs-initramfs (1.1-1) stable; urgency=low
   * Enhance dependencies to include openzfs-zfs-initramfs and openzfs-utils.
 
  -- Tobias Schäfer <tschaefer@blackox.org>  Wed, 27 Aug 2025 11:00:00 +0200
+
+yubikey-zfs-initramfs (1.1-2) stable; urgency=low
+
+  * Set copyright period.
+
+ -- Tobias Schäfer <tschaefer@blackox.org>  Thu, 08 Jan 2026 11:00:00 +0200
